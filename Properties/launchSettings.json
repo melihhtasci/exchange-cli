@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "exchange-cli": {
+      "commandName": "Project",
+      "commandLineArgs": "--fr AED --to TRY --am 2"
+    }
+  }
+}
