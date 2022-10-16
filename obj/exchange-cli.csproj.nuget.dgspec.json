@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Projeler\\.Net\\exchange-cli\\exchange-cli.csproj": {}
+    "C:\\GitHub\\exchange-cli\\exchange-cli.csproj": {}
   },
   "projects": {
-    "C:\\Projeler\\.Net\\exchange-cli\\exchange-cli.csproj": {
+    "C:\\GitHub\\exchange-cli\\exchange-cli.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Projeler\\.Net\\exchange-cli\\exchange-cli.csproj",
+        "projectUniqueName": "C:\\GitHub\\exchange-cli\\exchange-cli.csproj",
         "projectName": "exchange-cli",
-        "projectPath": "C:\\Projeler\\.Net\\exchange-cli\\exchange-cli.csproj",
+        "projectPath": "C:\\GitHub\\exchange-cli\\exchange-cli.csproj",
         "packagesPath": "C:\\Users\\melih\\.nuget\\packages\\",
-        "outputPath": "C:\\Projeler\\.Net\\exchange-cli\\obj\\",
+        "outputPath": "C:\\GitHub\\exchange-cli\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\melih\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -51,14 +51,15 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
           "downloadDependencies": [
             {
               "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[5.0.13, 5.0.13]"
+              "version": "[5.0.17, 5.0.17]"
             }
           ],
           "frameworkReferences": {
@@ -66,7 +67,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
         }
       }
     }

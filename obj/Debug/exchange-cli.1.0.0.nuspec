@@ -10,11 +10,11 @@
     </packageTypes>
   </metadata>
   <files>
-    <file src="C:\Projeler\.Net\exchange-cli\obj\DotnetToolSettings.xml" target="tools\net5.0\any\DotnetToolSettings.xml" />
-    <file src="C:\Projeler\.Net\exchange-cli\bin\Debug\net5.0\publish\exchange-cli.dll" target="tools\net5.0\any\exchange-cli.dll" />
-    <file src="C:\Projeler\.Net\exchange-cli\bin\Debug\net5.0\publish\exchange-cli.deps.json" target="tools\net5.0\any\exchange-cli.deps.json" />
-    <file src="C:\Projeler\.Net\exchange-cli\bin\Debug\net5.0\publish\exchange-cli.runtimeconfig.json" target="tools\net5.0\any\exchange-cli.runtimeconfig.json" />
-    <file src="C:\Projeler\.Net\exchange-cli\bin\Debug\net5.0\publish\exchange-cli.pdb" target="tools\net5.0\any\exchange-cli.pdb" />
-    <file src="C:\Projeler\.Net\exchange-cli\bin\Debug\net5.0\publish\McMaster.Extensions.CommandLineUtils.dll" target="tools\net5.0\any\McMaster.Extensions.CommandLineUtils.dll" />
+    <file src="C:\GitHub\exchange-cli\obj\DotnetToolSettings.xml" target="tools\net5.0\any\DotnetToolSettings.xml" />
+    <file src="C:\GitHub\exchange-cli\bin\Debug\net5.0\publish\exchange-cli.dll" target="tools\net5.0\any\exchange-cli.dll" />
+    <file src="C:\GitHub\exchange-cli\bin\Debug\net5.0\publish\exchange-cli.deps.json" target="tools\net5.0\any\exchange-cli.deps.json" />
+    <file src="C:\GitHub\exchange-cli\bin\Debug\net5.0\publish\exchange-cli.runtimeconfig.json" target="tools\net5.0\any\exchange-cli.runtimeconfig.json" />
+    <file src="C:\GitHub\exchange-cli\bin\Debug\net5.0\publish\exchange-cli.pdb" target="tools\net5.0\any\exchange-cli.pdb" />
+    <file src="C:\GitHub\exchange-cli\bin\Debug\net5.0\publish\McMaster.Extensions.CommandLineUtils.dll" target="tools\net5.0\any\McMaster.Extensions.CommandLineUtils.dll" />
   </files>
 </package>
