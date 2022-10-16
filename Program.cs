@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,15 +15,14 @@ namespace exchange_cli
     [HelpOption("--h")]
     public class Program
     {
-        [Option("--fr", Description = " Convert exchange from ... (3 letters)")]
+        [Argument(0, Description = "First arguemnt. Convert exchange from ... (3 letters)")]
         public string From { get; }
 
-        [Option("--to", Description = "Exchange to ... (3 letters)")]
+        [Argument(1, Description = "Second argument. Exchange to ... (3 letters)")]
         public string To { get; }
 
-        [Option("--am", Description = "Exchange amount ... (##.##)")]
+        [Argument(2, Description = "Third argument. Exchange amount ... (##.##)")]
         public static string Amount { get; set; }
-
 
         static List<string> currencyList = new List<string>();
         static HttpClient client = new HttpClient();
@@ -35,31 +32,29 @@ namespace exchange_cli
         private async Task<int> OnExecuteAsync(CommandLineApplication app, CancellationToken cancellationToken = default)
         {
             Helper.MakeLine();
-            Validations(From, To, Amount);
+            Helper.Validations(From, To, Amount);
             await GetCurrencies(From, To, Amount);
             GetCurrencyValue(From, To);
             Helper.MakeLine();
             return 1;
         }
 
-        static async Task GetCurrencies(string fromExchange = "", string toExchange = "", string amount = "")
+        static async Task GetCurrencies(string from = "", string to = "", string amount = "")
         {
-            var response = client.GetStreamAsync(Helper.UrlBuilder(fromExchange, amount));
+            var url = Helper.UrlBuilder(from, to, amount);
+            var response = client.GetStreamAsync(url);
             var exchange = await JsonSerializer.DeserializeAsync<Exchange>(await response);
 
             if (exchange.success)
             {
-                // convert to list via reflection
-                List<string> currencies = exchange.rates.GetType().GetProperties()
-                    .Select(cur =>
-                    {
-                        object value = cur.GetValue(exchange.rates, null);
-                        value = value == null ? "###" : value.ToString();
-                        return (cur.Name + '-' + value.ToString());
-                    }).ToList();
-
-                // transfer to static list for access
-                currencyList = currencies;
+                if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
+                {
+                    WriteExchangeResults(exchange);
+                }
+                else
+                {
+                    ConvertResultToListViaReflection(exchange);
+                }
             }
             else
             {
@@ -70,90 +65,77 @@ namespace exchange_cli
 
         }
 
+        private static void ConvertResultToListViaReflection(Exchange exchange)
+        {
+            // convert to list via reflection
+            List<string> currencies = exchange.rates.GetType().GetProperties()
+                .Select(cur =>
+                {
+                    object value = cur.GetValue(exchange.rates, null);
+                    value = value == null ? "###" : value.ToString();
+                    return (cur.Name + '-' + value.ToString());
+                }).ToList();
+
+            // transfer to static list for access
+            currencyList = currencies;
+        }
+
+        static void WriteExchangeResults(Exchange exchange) 
+        {
+            if (exchange.info.rate.Equals(null))
+            {
+                // api returns success but some values are null 
+                // so i can understand parameters can be wrong
+                Console.WriteLine("Exchange parameters can be wrong.");
+                Environment.Exit(0);
+            }
+            StringBuilder stringBuilder = new();
+            stringBuilder.Append($"{exchange.query.from}: {exchange.query.amount}\t\t");
+            stringBuilder.Append($"{exchange.query.to}: {exchange.result}\t\t");
+            stringBuilder.Append($"Rate: {exchange.info.rate}");
+
+            Console.WriteLine(stringBuilder.ToString());
+            Environment.Exit(0);
+            
+        }
+
         static void GetCurrencyValue(string from, string to)
         {
             string line = "";
-            if (string.IsNullOrEmpty(from))
+            // this condition for turkish guys like me. because of poor economy :(
+            // just shows 1 usd and eur value opposing tl
+            if (string.IsNullOrEmpty(from) && string.IsNullOrEmpty(to))
             {
-                line += Consts.TRY + ":1.00\t\t";
-            }
-            else
-            {
-                line += from.ToUpperInvariant() + ":1.00\t\t";
-            }
+                float usd = GetCurrencyBySplit(Consts.USD);
+                float eur = GetCurrencyBySplit(Consts.EUR);
 
-            if (string.IsNullOrEmpty(to))
-            {
-                string usd = GetCurrencyBySplit(Consts.USD);
-                string eur = GetCurrencyBySplit(Consts.EUR);
-
-                line += Consts.USD + ":" + usd + "\t\t";
-                line += Consts.EUR + ":" + eur + "\t\t";
+                line += Consts.USD + ":" + (1 / usd) + "\t\t";
+                line += Consts.EUR + ":" + (1 / eur) + "\t\t";
             }
-            else
-            {
-                string toValue = GetCurrencyBySplit(to);
-                line += to.ToUpper() + ":" + toValue + "\t\t";
-            }
-
             Console.WriteLine(line);
         }
 
-        static string GetCurrencyBySplit(string currency)
+        static float GetCurrencyBySplit(string currency)
         {
-            string nameAndValue = currencyList.Where(x => x.Contains(currency.ToUpper())).FirstOrDefault().ToString();
-            float valueOfCurrency = float.Parse(nameAndValue.Split('-')[1]); // exmp USD-14.23
-
-            // sub conditions are for penny 
-            // i didnt want to show like XYZ:1    ACD:0.121
+            float valueOfCurrency = ParseCurrencyAndValue(currency);
 
             if (!string.IsNullOrEmpty(Amount))
             {
-                float amountValue = float.Parse(Amount, CultureInfo.InvariantCulture.NumberFormat);
-
-                if (valueOfCurrency > 1)
-                    return (valueOfCurrency).ToString().Replace(",", ".");
-
-                else
-                    return ((amountValue / valueOfCurrency) * amountValue).ToString().Replace(",", ".");
-
+                return float.Parse(Amount, CultureInfo.InvariantCulture.NumberFormat);
             }
             else
             {
-
-                if (valueOfCurrency > 1)
-                    return valueOfCurrency.ToString().Replace(",", ".");
-                else
-                    return (1 / valueOfCurrency).ToString().Replace(",", ".");
+                return valueOfCurrency;
             }
-
         }
 
-        static void Validations(string from, string to, string amount)
+        private static float ParseCurrencyAndValue(string currency)
         {
-            try
-            {
-                if (!string.IsNullOrEmpty(from))
-                    if (!Regex.IsMatch(from, "^[a-zA-Z]+$") || from.Length != 3)
-                        throw new Exception("FROM value must be only letter and length must be 3");
-
-                if (!string.IsNullOrEmpty(to))
-                    if (!Regex.IsMatch(to, "^[a-zA-Z]+$") || from.Length != 3)
-                        throw new Exception("TO value must be only letter and length must be 3");
-
-                if (!string.IsNullOrEmpty(amount))
-                {
-                    // regex number and number-dot check
-                    // throw new Exception("AMOUNT value include just number or number with dot. Example : 23.1");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Environment.Exit(0);
-            }
-
+            string nameAndValue = currencyList.Where(x => x.Contains(currency.ToUpper())).FirstOrDefault().ToString();
+            float valueOfCurrency = float.Parse(nameAndValue.Split('-')[1]); // exmp USD-14.23
+            return valueOfCurrency;
         }
+
 
     }
 

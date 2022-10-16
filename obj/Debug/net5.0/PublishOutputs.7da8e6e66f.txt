@@ -1,0 +1,6 @@
+C:\GitHub\exchange-cli\bin\Debug\net5.0\publish\exchange-cli.exe
+C:\GitHub\exchange-cli\bin\Debug\net5.0\publish\exchange-cli.dll
+C:\GitHub\exchange-cli\bin\Debug\net5.0\publish\exchange-cli.deps.json
+C:\GitHub\exchange-cli\bin\Debug\net5.0\publish\exchange-cli.runtimeconfig.json
+C:\GitHub\exchange-cli\bin\Debug\net5.0\publish\exchange-cli.pdb
+C:\GitHub\exchange-cli\bin\Debug\net5.0\publish\McMaster.Extensions.CommandLineUtils.dll

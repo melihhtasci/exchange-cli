@@ -2,9 +2,10 @@
 
 This cli shows rate of exchange via this [free api](https://api.exchangerate.host/latest). 
 
-``rate`` is default command to run. This command shows rates of turkish lira, dollar and euro as in picture below.
+``rate`` is default command to run. 
+This command shows 1 dollar and euro value opposing turkish lira as in picture below.
 
-<img src="https://github.com/melihhtasci/exchange-cli/blob/main/doc_images/rate-command.png?raw=true" />
+<img src="https://github.com/melihhtasci/exchange-cli/blob/main/doc_images/default.png?raw=true" />
 <br/>
 
 Help command is similar like other CLIs. ``rate --h``
@@ -12,9 +13,20 @@ Help command is similar like other CLIs. ``rate --h``
 <img src="https://github.com/melihhtasci/exchange-cli/blob/main/doc_images/help.png?raw=true" />
 <br/>
 
-For other currencies, you can use --fr --to parameters. --am for exchange amount. 
+On previos version, i was using ``Option`` to get parameters. 
+We were supposed to use parameter by dash. I changed it with ``Argument``. 
 
-<img src="https://github.com/melihhtasci/exchange-cli/blob/main/doc_images/all-commands.png?raw=true" />
+You can see the usage in picture below
+
+<img src="https://github.com/melihhtasci/exchange-cli/blob/main/doc_images/command-1.png?raw=true" />
+<br/>
+
+
+<img src="https://github.com/melihhtasci/exchange-cli/blob/main/doc_images/command-2.png?raw=true" />
+<br/>
+
+
+<img src="https://github.com/melihhtasci/exchange-cli/blob/main/doc_images/error.png?raw=true" />
 <br/>
 
 #### Packing
@@ -26,7 +38,7 @@ For other currencies, you can use --fr --to parameters. --am for exchange amount
 <PackageOutputPath>./nupkg</PackageOutputPath>
 ```
 2. run ``dotnet pack``
-2. run ``dotnet tool install --global --add-source ./nupkg``
+2. run ``dotnet tool install --global --add-source ./nupkg exchange-cli``
 
 
 
